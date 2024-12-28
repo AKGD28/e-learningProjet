@@ -1,0 +1,324 @@
+{% extends 'bases/header_instructor.html' %}
+
+
+
+{% block style %}
+    <!-- Vendor Dropzone CSS -->
+    <link rel="stylesheet" href="/static/assets/vendor/dropzone.min.css">
+    <link rel="stylesheet" href="/static/assets/css/dropzone.css">
+    <link rel="stylesheet" href="/static/assets/css/dropzone.rtl.css">
+    <link rel="stylesheet" href="/static/assets/css/fancytree.css">
+    <link rel="stylesheet" href="/static/assets/css/fancytree.rtl.css"> 
+{% endblock style %}
+    
+{% block content %}
+
+        <!-- Header Layout Content -->
+                <div class="mdk-drawer-layout__content page ">
+
+                    <div class="container-fluid page__container" id="lesson-add">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Accueil</a></li>
+                            <li class="breadcrumb-item active">Leçons</li>
+                        </ol>
+                        <h1 class="h2">Ajouter une leçon</h1>
+                        <div v-if="isSuccess" class="alert alert-success" role="alert">
+                            ${ message }
+                        </div>
+                        <div v-if="error" class="alert alert-danger" role="alert">
+                            ${ message }
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <form action="#">
+                                    <div class="form-group row">
+                                        <label for="avatar" class="col-sm-3 col-form-label form-label">Image</label>
+                                        <div class="col-sm-9">
+                                            <div class="media align-items-center">
+                                                <div class="custom-file">
+                                                    <input v-on:change="handleImageUploaded" ref="file" type="file" accept="image/*" class="custom-file-input">
+                                                    <label for="file" class="custom-file-label">Choisissez votre image</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="avatar" class="col-sm-3 col-form-label form-label">fichier PDF</label>
+                                        <div class="col-sm-9">
+                                            <div class="media align-items-center">
+                                                <!-- <div class="media-left">
+                                                    <img src="/static/assets/images/vuejs.png" alt="" width="100" class="rounded">
+                                                </div> -->
+                                                <div class="custom-file">
+                                                    <input v-on:change="handlePdfUploaded" ref="files" type="file" accept="application/pdf"
+                                                        class="custom-file-input">
+                                                    <label for="file" class="custom-file-label">Choisissez votre PDF</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="title" class="col-md-3 col-form-label form-label">Titre</label>
+                                        <div class="col-md-9">
+                                            <input id="title" type="text" class="form-control" placeholder="Write an awesome title" v-model="title">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="title" class="col-md-3 col-form-label form-label">Description</label>
+                                        <div class="col-md-9">
+                                            <textarea class="form-control"  v-model="description"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label form-label">Vidéo</label>
+                                        <div class="col-md-9">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="custom-file">
+                                                            <input v-on:change="handleFileUploaded" ref='fichier' type="file" accept="video/*"
+                                                                class="custom-file-input">
+                                                            <label for="file" class="custom-file-label">Choisissez la vidéo</label>
+                                                        </div>
+                                                        <small class="form-text text-muted d-flex align-items-center">
+                                                            <!-- <i class="material-icons font-size-16pt mr-1">ondemand_video</i> -->
+                                                            <!-- <span class="icon-text">Paste Video</span> -->
+                                                        </small>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <hr>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="embed-responsive embed-responsive-16by9">
+                                                            <iframe class="embed-responsive-item" src=" {{cours.video.url}}" allowfullscreen=""></iframe>
+                                                        </div>
+                                                        <p>vidéo</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <img src="{{cours.image.url}}" width="300px" height="180px" alt="">
+                                                        <p>image</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="embed-responsive embed-responsive-16by9">
+                                                            <iframe class="embed-responsive-item" src="{{ cours.pdf.url}}" allowfullscreen=""></iframe>
+                                                        </div>
+                                                        <p>pdf</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <center>
+                                    <button v-if="!isregister" v-on:click.prevent="lesson_add" type="button"
+                                        class="btn btn-success btn-rounded">Enregistrer</button>
+                                    <button href="#" v-if="isregister" disabled 
+                                        class="btn btn-success">Enregistrer</button>
+                                    <a class="btn btn-danger btn-rounded" href="#" data-toggle="modal" data-target="#delete_lesson">Supprimer</a>
+                                    <a class="btn btn-outline-warning btn-rounded" 
+   href="{% url 'instructor-quiz-add' %}?lesson_id={{ cours.id }}">
+   Ajouter un quizz
+</a>
+                                    </center>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+
+    {% endblock content %}
+
+
+    
+    {% block script %}
+<div class="modal fade" id="delete_lesson">
+    <div class="modal-dialog modal-dialog-centered" id="lesson-del">
+        <div class="modal-content">
+            <div class="modal-header bg-danger">
+                <h4 class="modal-title text-white">Confirmation</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#">
+                    <h3>Etes vous sûr de vouloir supprimer cette leçon?</h3>
+                    <div class="form-group row mb-0">
+                        <div class="col-md-8 offset-md-3">
+                            <button v-on:click.prevent="delete_lesson" class="btn btn-danger">Supprimer</button>
+                            <button data-dismiss="modal" class="btn btn-success"> Annuler</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/static/assets/js/axios.js"></script>
+
+<!-- vue -->
+<script src="/static/assets/js/vue.js"></script>
+
+<script>
+// Block Vue JS  
+new Vue({
+el: '#lesson-add',
+data: {
+    title: '{{ cours.titre }}',
+    id: '{{ cours.id }}',
+    description: '{{ cours.description }}',
+    file : '{{ cours.video.url }}',
+    image:'{{ cours.image.url }}',
+    pdf:'{{ cours.pdf.url }}',
+    chapitre : '{{ chapitre.id }}',
+   isregister: false,
+   loader: false,
+   isSuccess: false,
+   error: false,
+   base_url: window.location.protocol + "//" + window.location.host + "/",
+},
+delimiters: ["${", "}"],
+mounted() { },
+methods: {
+    lesson_add: function () {
+       if (!this.isregister) {
+           this.error = false
+           this.isSuccess = false
+           this.isregister = true
+           if (this.title == '{{ cours.titre }}' && this.file == '{{ cours.video.url }}' && this.description == `{{ cours.description }}` && this.image == '{{ cours.image.url }}' && this.pdf == '{{ cours.pdf.url }}' ) {
+               this.message = "Aucun changement";
+               this.error = true;
+               this.isSuccess = false;
+               this.isregister = false;
+           } else {
+            //    permet d'imploder des fichiers
+               let formData = new FormData();
+               formData.append('file', this.file);
+               formData.append('title', this.title);
+               formData.append('id', this.id);
+               formData.append('image', this.image);
+               formData.append('description', this.description);
+               formData.append('pdf', this.pdf);
+               formData.append('chapitre', this.chapitre);
+               axios.defaults.xsrfCookieName = 'csrftoken'
+               axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+               axios.post(this.base_url + 'instructor/post_lesson',
+                   formData,
+                   {
+                       headers: {
+                           'Content-Type': 'multipart/form-data',
+                       }
+                   }).then(response => {
+                   console.log(response)
+                   this.isregister = false;
+                   if (response.data.success) {
+                       this.isSuccess = true
+                       this.error = false
+                       this.message = response.data.message
+                       this.success = response.data.success
+                       window.location.replace(this.base_url + 'instructor/courses');
+                   } else {
+                       this.error = true
+                       this.message = response.data.message
+                       this.success = response.data.success
+                       this.isSuccess = false
+                   }
+                   console.log("success variable" + this.isSuccess)
+                   // console.log("success variable"+this.error)
+               })
+                   .catch((err) => {
+                       this.isregister = false;
+                       console.log(err);
+                   })
+           }
+       }
+   },
+   handleImageUploaded() {
+        this.image = this.$refs.file.files[0];
+        console.log(this.image)
+    },
+
+   handlePdfUploaded() {
+        this.pdf = this.$refs.files.files[0];
+        console.log(this.pdf)
+    },
+
+   handleFileUploaded() {
+        this.file = this.$refs.fichier.files[0];
+        console.log(this.file)
+    },
+}
+});
+</script>
+
+
+
+
+<script>
+// Block Vue JS for delete lesson   
+new Vue({
+el: '#lesson-del',
+data: {
+    id: '{{ cours.id }}',
+   isregister: false,
+   loader: false,
+   isSuccess: false,
+   error: false,
+   base_url: window.location.protocol + "//" + window.location.host + "/",
+},
+delimiters: ["${", "}"],
+mounted() { },
+methods: {
+    delete_lesson: function () {
+            let formData = new FormData();
+            formData.append('id', this.id);
+            axios.defaults.xsrfCookieName = 'csrftoken'
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+            axios.post(this.base_url + 'instructor/delete_lesson',
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    }
+                }).then(response => {
+                    console.log(response)
+                    this.isregister = false;
+                    if (response.data.success) {
+                        this.isSuccess = true
+                        this.error = false
+                        this.message = response.data.message
+                        this.success = response.data.success
+                        window.location.replace(this.base_url + 'instructor/courses');
+                    } else {
+                        this.error = true
+                        this.message = response.data.message
+                        this.success = response.data.success
+                        this.isSuccess = false
+                    }
+                    console.log("success variable" + this.isSuccess)
+                    // console.log("success variable"+this.error)
+                })
+                .catch((err) => {
+                    this.isregister = false;
+                    console.log(err);
+                })
+    },
+}
+});
+</script>
+        <!-- Required by Calendar (fullcalendar) -->
+        <script src="/static/assets/vendor/dropzone.min.js"></script>
+        <script src="/static/assets/vendor/jquery.fancytree-all.min.js"></script>
+        
+        <!-- Init -->
+        <script src="/static/assets/js/fancytree.js"></script>
+
+        
+    {% endblock script %}
+        

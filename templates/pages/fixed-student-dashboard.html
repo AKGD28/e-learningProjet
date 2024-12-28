@@ -1,0 +1,186 @@
+{% extends 'bases/student_header.html' %}
+
+        
+        {% block content %}
+            
+            
+            <div class="page ">
+
+                <div class="container page__container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'index_student' %}">Accueil</a></li>
+                        <li class="breadcrumb-item active">Dashboard</li>
+                    </ol>
+                    <h1 class="h2">Dashboard</h1>
+
+                    <div class="row">
+                        <div class="col-lg-7">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <h4 class="card-title">Courses</h4>
+                                            <p class="card-subtitle">Your recent courses</p>
+                                        </div>
+                                        <div class="media-right">
+                                            <a class="btn btn-sm btn-primary" href="{% url 'my-courses' %}">My courses</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                  
+                                <ul class="list-group list-group-fit mb-0" style="z-index: initial;">
+                                        {% for i in cours %}
+                                    <li class="list-group-item" style="z-index: initial;">
+                                        <div class="d-flex align-items-center">
+                                            <a href="{% url 'take-course' i.slug %}" class="avatar avatar-4by3 avatar-sm mr-3">
+                                                <img src="{{i.image.url}}" alt="course" class="avatar-img rounded">
+                                            </a>
+                                            <div class="flex">
+                                                <a href="{% url 'take-course' i.slug %}" class="text-body"><strong>{{i.titre}}</strong></a>
+                                                <div class="d-flex align-items-center">
+                                                    <small class="text-muted ml-2">{{i.date_add}}</small>
+                                                    <small class="text-muted ml-2">{{ i.description }}</small>
+                                                </div>
+                                            </div>
+                                            <div class="dropdown ml-3">
+                                                <a href="#" class="dropdown-toggle text-muted" data-caret="false" data-toggle="dropdown">
+                                                    <i class="material-icons">more_vert</i>
+                                                </a>
+                                                <div class="dropdown-menu dropdown-menu-right">
+                                                    <a class="dropdown-item" href="{% url 'take-course' i.slug %}">Continuer</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                        {% endfor%}
+                                   
+
+                                </ul>
+                               
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <h4 class="card-title">Quizzes</h4>
+                                            <p class="card-subtitle">Your Performance Overview</p>
+                                        </div>
+                                        <div class="media-right">
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <ul class="list-group list-group-fit mb-0">
+                                    {% for quiz in quizzes %}
+                                    <li class="list-group-item">
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <a class="text-body" href="{% url 'quiz_detail' quiz.id %}">
+                                                    <strong>{{ quiz.title }}</strong>
+                                                </a><br>
+                                                <div class="d-flex align-items-center">
+                                                    <small class="text-black-50 text-uppercase mr-2">Course:</small>
+                                                    <a href="{% url 'course_detail' quiz.course.id %}" class="text-primary">{{ quiz.course.name }}</a>
+                                                </div>
+                                            </div>
+                                            <div class="media-right text-center d-flex align-items-center">
+                                                {% if quiz.score >= 8 %}
+                                                <span class="badge badge-success mr-2">Great</span>
+                                                <h4 class="mb-0 text-success">{{ quiz.score }}</h4>
+                                                {% elif quiz.score >= 5 %}
+                                                <span class="badge badge-info mr-2">Good</span>
+                                                <h4 class="mb-0">{{ quiz.score }}</h4>
+                                                {% else %}
+                                                <span class="badge badge-danger mr-2">Failed</span>
+                                                <h4 class="mb-0 text-danger">{{ quiz.score }}</h4>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% empty %}
+                                    <li class="list-group-item text-center">
+                                        <p class="text-muted">No quizzes taken yet.</p>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            
+                        </div>
+                        <div class="col-lg-5">
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <h4 class="card-title">Forum Activity</h4>
+                                            <p class="card-subtitle">Latest forum topics &amp; replies</p>
+                                        </div>
+                                        <div class="media-right">
+                                            <a class="btn btn-sm btn-primary" href="{% url 'forum' %}"> <i class="material-icons">keyboard_arrow_right</i></a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+                                <ul class="list-group list-group-fit">
+
+                                    
+                                    {% if forum_count > 0 %}
+                                    
+                                    {% for i in forum %}
+                                    
+                                    <li class="list-group-item forum-thread">
+                                        <div class="media align-items-center">
+                                            <div class="media-left">
+                                                <div class="forum-icon-wrapper">
+                                                    <a href="{% url 'forum-thread' i.slug %}" class="forum-thread-icon">
+                                                        <i class="material-icons">description</i>
+                                                    </a>
+                                                    <a href="#" class="forum-thread-user">
+                                                        <img src="{{ i.user.student_user.photo.url }}" alt="" width="20" class="rounded-circle">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="d-flex align-items-center">
+                                                    <a href="#" class="text-body"><strong>{{ i.user.last_name }} {{ i.user.first_name }}</strong></a>
+                                                    <small class="ml-auto text-muted">{{ i.date_add }}</small>
+                                                </div>
+                                                <a class="text-black-70" href="{% url 'forum-thread' i.slug %}">{{ i.titre }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                                    
+                                    {% else %}
+                                    <div class="alert alert-info" role="alert">
+                                        Pas de sujet, Soyez le premier à ajouter un sujet 😀!!!
+                                    </div>
+                                    {% endif %}
+
+                                        
+
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="container page__container">
+                    <div class="footer">
+                        Copyright &copy; 2016 - <a href="http://themeforest.net/item/learnplus-learning-management-application/15287372?ref=mosaicpro">Purchase LearnPlus</a>
+                    </div>
+                </div>
+            </div>
+
+        {% endblock content %}

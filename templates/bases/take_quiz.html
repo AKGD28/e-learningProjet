@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+<!-- Mirrored from learnplus-bootstrap.frontendmatter.com/fixed-student-take-quiz.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 10 Apr 2020 14:28:13 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Student - Take quiz - Fixed layout</title>
+
+    <!-- Prevent the demo from appearing in search engines (REMOVE THIS) -->
+    <meta name="robots" content="noindex">
+
+    <!-- Perfect Scrollbar -->
+    <link type="text/css" href="/static/assets/vendor/perfect-scrollbar.css" rel="stylesheet">
+
+    <!-- Material Design Icons -->
+    <link type="text/css" href="/static/assets/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="/static/assets/css/material-icons.rtl.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link type="text/css" href="/static/assets/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="/static/assets/css/fontawesome.rtl.css" rel="stylesheet">
+
+    <!-- App CSS -->
+    <link type="text/css" href="/static/assets/css/app.css" rel="stylesheet">
+    <link type="text/css" href="/static/assets/css/app.rtl.css" rel="stylesheet">
+
+</head>
+
+<body class=" layout-fluid">
+
+    <div class="preloader">
+        <div class="sk-double-bounce">
+            <div class="sk-child sk-double-bounce1"></div>
+            <div class="sk-child sk-double-bounce2"></div>
+        </div>
+    </div>
+
+    <!-- Header Layout -->
+    <div class="mdk-header-layout js-mdk-header-layout">
+
+        <!-- Header -->
+
+        <div id="header" class="mdk-header bg-dark js-mdk-header m-0" data-fixed data-effects="waterfall"/static/>
+        <div class="mdk-header__content">
+    
+            <!-- Navbar -->
+            <nav id="default-navbar" class="navbar navbar-expand navbar-dark bg-primary m-0">
+                <div class="container">
+                    <!-- Toggle sidebar -->
+                    <button class="navbar-toggler d-block" data-toggle="sidebar" type="button">
+                        <span class="material-icons">menu</span>
+                    </button>
+    
+                    <!-- Brand -->
+                    <a href="{'% url index' %}" class="navbar-brand">
+                        <img src="/static/assets/images/logo/white.svg" class="mr-2" alt="LearnPlus" />
+                        <span class="d-none d-xs-md-block">LearnPlus</span>
+                    </a>
+    
+                    <div class="flex"></div>
+    
+                    <!-- Menu -->
+                    <ul class="nav navbar-nav flex-nowrap d-none d-lg-flex">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'forum' %} " title="forum">
+                                <i class="material-icons">forum</i>
+                            </a>
+                        </li>
+                    </ul>
+    
+                    <!-- Menu -->
+                    <ul class="nav navbar-nav flex-nowrap">
+    
+                        <li class="nav-item d-none d-md-flex">
+                            <a href="{% url 'messages' user.student_user.classe  %}" title="Chat" class="nav-link">
+                                <i class="material-icons">chat</i>
+                            </a>
+                        </li>
+                        <!-- User dropdown -->
+                        <li class="nav-item dropdown ml-1 ml-md-3">
+                            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button"><img
+                                    src="{{user.student_user.photo.url}}" alt="Avatar" class="rounded-circle"
+                                    width="40">{{user.username}}</a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="{% url 'account-edit' %}">
+                                    <i class="material-icons">edit</i> Edit Account
+                                </a>
+                                <a class="dropdown-item" href="{% url 'profile' %}">
+                                    <i class="material-icons">person</i> Public Profile
+                                </a>
+                                <a class="dropdown-item" href="{% url 'deconnexion'%}">
+                                    <i class="material-icons">lock</i> Logout
+                                </a>
+                            </div>
+                        </li>
+                        <!-- // END User dropdown -->
+    
+                    </ul>
+                    <!-- // END Menu -->
+                </div>
+            </nav>
+            <!-- // END Navbar -->
+    
+        </div>
+        </div>
+
+        
+        {% block content %}
+            
+        {% endblock content %}
+            
+        <!-- // END Header -->
+
+        <!-- Header Layout Content -->
+        
+    </div>
+
+
+
+
+
+    <div class="mdk-drawer js-mdk-drawer" id="default-drawer">
+        <div class="mdk-drawer__content ">
+            <div class="sidebar sidebar-left sidebar-dark bg-dark o-hidden" data-perfect-scrollbar>
+                <div class="sidebar-p-y">
+                    <div class="sidebar-heading">APPLICATIONS</div>
+                    <ul class="sidebar-menu sm-active-button-bg">
+                        <li class="sidebar-menu-item active">
+                            <a class="sidebar-menu-button" href="{% url 'index_student' %}">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">account_box</i> Student
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- Account menu -->
+                    <div class="sidebar-heading">Compte</div>
+                    <ul class="sidebar-menu">
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button sidebar-js-collapse" data-toggle="collapse" href="#account_menu">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">person_outline</i>
+                                Account
+                                <span class="ml-auto sidebar-menu-toggle-icon"></span>
+                            </a>
+                            <ul class="sidebar-submenu sm-indent collapse" id="account_menu">
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" href="{% url 'edit' %} ">
+                                        <span class="sidebar-menu-text">Profile</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" href="{% url 'profile' %}">
+                                        <span class="sidebar-menu-text">Profile public</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button" href="{% url 'messages' user.student_user.classe %}">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">comment</i> Messages
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="sidebar-heading">Student</div>
+                    <ul class="sidebar-menu sm-active-button-bg">
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button" href="{% url 'quiz-list' %}">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">dvr</i> Mes quizs
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button" href="#">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">poll</i> Mes résultats
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button" href="{% url 'my-courses' %}">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">school</i> Mes cours
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button" data-toggle="collapse" href="#forum_menu">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">chat_bubble_outline</i>
+                                Communauté
+                                <span class="ml-auto sidebar-menu-toggle-icon"></span>
+                            </a>
+                            <ul class="sidebar-submenu sm-indent collapse" id="forum_menu">
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" href="{% url 'forum' %} ">
+                                        <span class="sidebar-menu-text">Forum</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-menu-item">
+                                    <a class="sidebar-menu-button" href="{% url 'forum-ask' %} ">
+                                        <span class="sidebar-menu-text">Posez une question</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a class="sidebar-menu-button" href="{% url 'deconnexion'%}">
+                                <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">lock_open</i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- jQuery -->
+    <script src="/static/assets/vendor/jquery.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/static/assets/vendor/popper.min.js"></script>
+    <script src="/static/assets/vendor/bootstrap.min.js"></script>
+
+    <!-- Perfect Scrollbar -->
+    <script src="/static/assets/vendor/perfect-scrollbar.min.js"></script>
+
+    <!-- MDK -->
+    <script src="/static/assets/vendor/dom-factory.js"></script>
+    <script src="/static/assets/vendor/material-design-kit.js"></script>
+
+    <!-- App JS -->
+    <script src="/static/assets/js/app.js"></script>
+
+    <!-- Highlight.js -->
+    <script src="/static/assets/js/hljs.js"></script>
+
+    <!-- App Settings (safe to remove) -->
+    <script src="/static/assets/js/app-settings.js"></script>
+
+
+    <!-- Required by countdown -->
+    <script src="/static/assets/vendor/moment.min.js"></script>
+    <!-- Easy Countdown -->
+    <script src="/static/assets/vendor/jquery.countdown.min.js"></script>
+
+
+
+    <!-- Init -->
+    <script src="/static/assets/js/countdown.js"></script>
+
+    
+    {% block script %}
+        
+    {% endblock script %}
+        
+</body>
+
+<!-- Mirrored from learnplus-bootstrap.frontendmatter.com/fixed-student-take-quiz.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 10 Apr 2020 14:28:13 GMT -->
+
+</html>

@@ -1,0 +1,155 @@
+{% extends 'bases/header_instructor.html' %}
+{% block content %}
+<div class="mdk-drawer-layout__content page">
+    <div class="container-fluid page__container">
+        
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'dashboard' %}">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'instructor-quizzes' %}">Quiz Manager</a>
+            </li>
+            <li class="breadcrumb-item active">Quiz Review</li>
+        </ol>
+
+        <!-- Informations sur le Quiz -->
+        <div class="media flex-wrap align-items-center mb-headings">
+            <div class="media-left avatar avatar-lg avatar-4by3">
+                {% if quiz and quiz.image %}
+                    <img src="{{ quiz.image.url }}" alt="Quiz Image" class="avatar-img rounded">
+                {% else %}
+                    <img src="/static/assets/images/default_quiz.png" alt="Default Quiz Image" class="avatar-img rounded">
+                {% endif %}
+            </div>
+            <div class="media-body mb-3 mb-sm-0">
+                <h1 class="h2 mb-0">{{ quiz.name }}</h1>
+                <span class="text-muted">Created by</span>
+                <a href="#">{{ quiz.owner.username }}</a>
+            </div>
+            <div class="text-left text-sm-right w-100 w-sm-auto">
+                <a href="#" class="btn btn-white btn-sm">
+                    <i class="material-icons">keyboard_arrow_left</i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm">
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Onglets -->
+        <div class="card">
+            <ul class="nav nav-tabs nav-tabs-card">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#first" data-toggle="tab">
+                        Review
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#second" data-toggle="tab">
+                        All Questions
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <!-- Onglet : Review -->
+                <div class="tab-pane active" id="first">
+                    <ul class="list-group mb-0 list-group-fit">
+                        {% for question in quiz.questions.all %}
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <p><strong>{{ forloop.counter }}. {{ question.text }}</strong></p>
+                                    <small class="text-muted">Student Answer:</small>
+                                    <p>{{ question.student_answer.text|default:"No answer provided" }}</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group d-flex flex-column">
+                                        <label class="form-label" for="score_{{ question.id }}">Score</label>
+                                        <input type="range" id="score_{{ question.id }}" class="custom-range" min="0" max="5">
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control" rows="2" placeholder="Write comment"></textarea>
+                                    </div>
+                                    <a href="#" class="btn btn-success float-right">Save Review</a>
+                                </div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">
+                            <p>No questions available for review.</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Onglet : All Questions -->
+                <div class="tab-pane" id="second">
+                    <ul class="list-group mb-0 list-group-fit">
+                        {% for question in quiz.questions.all %}
+                        <li class="list-group-item">
+                            <div class="media">
+                                <div class="media-left">
+                                    <div class="text-muted-light">{{ forloop.counter }}.</div>
+                                </div>
+                                <div class="media-body">{{ question.text }}</div>
+                                <div class="media-right">
+                                    <strong class="text-primary">{{ question.answers.count }}</strong>
+                                </div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">
+                            <p>No questions found.</p>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Historique des tentatives -->
+        <h4>Review History</h4>
+        <div class="table-responsive">
+            <table class="table table-sm table-middle">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Student</th>
+                        <th class="text-center">Score</th>
+                        <th>Reviewed</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attempt in taken_quizzes %}
+                    <tr>
+                        <td>
+                            <span class="badge badge-light">{{ attempt.date|date:"M j, Y" }}</span>
+                        </td>
+                        <td>
+                            <a href="#">{{ attempt.student.user.username }}</a>
+                        </td>
+                        <td class="text-center">{{ attempt.score|default:"N/A" }}</td>
+                        <td>
+                            {% if attempt.date_reviewed %}
+                                {{ attempt.date_reviewed|date:"M j, Y" }} by {{ request.user.username }}
+                            {% else %}
+                                <span class="text-muted">PENDING</span>
+                            {% endif %}
+                        </td>
+                        <td class="right">
+                            <a href="#" class="btn btn-sm btn-primary">Review</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No review history available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

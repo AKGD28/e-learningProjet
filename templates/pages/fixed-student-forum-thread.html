@@ -1,0 +1,289 @@
+{% extends 'bases/student_header.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page">
+
+    <div class="container page__container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index_student' %}">Accueil</a></li> 
+            
+            {% if forum.cours is not none %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'forum-lesson' forum.cours.slug %}">Forum</a>
+                </li>
+            {% else %}
+                <li class="breadcrumb-item">
+                    <a href="{% url 'forum' %}">Forum</a>
+                </li>
+            {% endif %}
+            
+            <li class="breadcrumb-item active">Discussion</li>
+        </ol>
+
+        <div class="row">
+            <!-- Colonne principale -->
+            <div class="col-md-8">
+                <!-- Titre du forum -->
+                <h1 class="h2 mb-2">{{ forum.titre }}</h1>
+                
+                <!-- Lien "Retour" vers forum ou forum-lesson -->
+                <p class="text-muted d-flex align-items-center mb-4">
+                    {% if forum.cours is not none %}
+                        <a href="{% url 'forum-lesson' forum.cours.slug %}" class="mr-3">Retour</a>
+                    {% else %}
+                        <a href="{% url 'forum'  %}" class="mr-3">Retour</a>
+                    {% endif %}
+                </p>
+
+                <!-- Carte affichant la question principale -->
+                <div class="card card-body">
+                    <div class="d-flex">
+                        <a href="#" class="avatar mr-3">
+                            {% if forum.user.student_user.get_u_type %}
+                            <img src="{{ forum.user.student_user.photo.url }}"
+                                 alt="{{ forum.user.last_name }}"
+                                 class="avatar-img rounded-circle">
+                            {% elif forum.user.instructor.get_u_type %}
+                            <img src="{{ forum.user.instructor.photo.url }}"
+                                 alt="{{ forum.user.last_name }}"
+                                 class="avatar-img rounded-circle">
+                            {% endif %}
+                        </a>
+                        <div class="flex">
+                            <p class="d-flex align-items-center mb-2">
+                                <a href="#" class="text-body mr-2">
+                                    <strong>{{ forum.user.last_name }} {{ forum.user.first_name }}</strong>
+                                </a>
+                                <small class="text-muted">{{ forum.date_add }}</small>
+                            </p>
+                            <p>{{ forum.question }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORMULAIRE DE RÉPONSE (géré par Vue.js) -->
+                <!-- Ajout d’un id et d’un attribut data pour récupérer le slug du forum côté Vue -->
+                <div class="d-flex mb-4" id="reponse-add" data-forum-slug="{{ forum.slug }}">
+                    <!-- Avatar de l'utilisateur connecté -->
+                    <a href="#" class="avatar mr-3">
+                        {% if user.student_user.get_u_type %}
+                        <img src="{{ user.student_user.photo.url }}"
+                             alt="people"
+                             class="avatar-img rounded-circle">
+                        {% elif user.instructor.get_u_type %}
+                        <img src="{{ user.instructor.photo.url }}"
+                             alt="people"
+                             class="avatar-img rounded-circle">
+                        {% endif %}
+                    </a>
+
+                    <div class="flex">
+                        <!-- Alertes de succès et d’erreur -->
+                        <div v-if="isSuccess" class="alert alert-success" role="alert">
+                            {{ message }}
+                        </div>
+                        <div v-if="error" class="alert alert-danger" role="alert">
+                            {{ message }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="comment" class="form-label">
+                                Avez-vous une réponse&nbsp;?
+                            </label>
+                            <!-- Liaison Vue sur la variable "reponse" -->
+                            <textarea class="form-control"
+                                      name="comment"
+                                      id="comment"
+                                      rows="3"
+                                      placeholder="Entrez votre réponse"
+                                      v-model="reponse"></textarea>
+                        </div>
+                        <button class="btn btn-success"
+                                @click.prevent="postReponse"
+                                :disabled="isSubmitting">
+                            Je réponds
+                        </button>
+                    </div>
+                </div>
+
+                <!-- LISTE DES RÉPONSES EXISTANTES -->
+                <div class="pt-3">
+                    <h4>{{ forum.sujet_reponse.count }} Réponse(s)</h4>
+                    
+                    {% for i in forum.sujet_reponse.all %}
+                    <div class="d-flex ml-sm-32pt mt-3 border rounded p-3 bg-light mb-3">
+                        <a href="#" class="avatar avatar-xs mr-3">
+                            {% if i.user.student_user.get_u_type %}
+                            <img src="{{ i.user.student_user.photo.url }}"
+                                 alt="{{ i.user.last_name }}"
+                                 class="avatar-img rounded-circle">
+                            {% elif i.user.instructor.get_u_type %}
+                            <img src="{{ i.user.instructor.photo.url }}"
+                                 alt="{{ i.user.last_name }}"
+                                 class="avatar-img rounded-circle">
+                            {% endif %}
+                        </a>
+                        <div class="flex">
+                            <div class="d-flex align-items-center">
+                                <a href="#" class="text-body">
+                                    <strong>{{ i.user.last_name }} {{ i.user.first_name }}</strong>
+                                </a>
+                                <small class="ml-auto text-muted">{{ i.date_add }}</small>
+                            </div>
+                            <p class="mt-1 mb-0 text-black-70">{{ i.reponse }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- SIDEBAR : autres sujets -->
+            <div class="col-md-4">
+                <h4>Autres sujets</h4>
+                <p class="text-black-70">Certains sujets qui pourraient vous aider.</p>
+
+                {% if forum.cours %}
+                    {% for i in forum.cours.cours_forum.all %}
+                        {% if i.id != forum.id %}
+                        <li class="list-group-item forum-thread">
+                            <div class="media align-items-center">
+                                <div class="media-left">
+                                    <div class="forum-icon-wrapper">
+                                        <a href="{% url 'forum-thread' i.slug %}"
+                                           class="forum-thread-icon">
+                                            <i class="material-icons">description</i>
+                                        </a>
+                                        <a href="#" class="forum-thread-user">
+                                            {% if i.user.student_user.get_u_type %}
+                                            <img src="{{ i.user.student_user.photo.url }}"
+                                                 alt=""
+                                                 width="20"
+                                                 class="rounded-circle">
+                                            {% elif i.user.instructor.get_u_type %}
+                                            <img src="{{ i.user.instructor.photo.url }}"
+                                                 alt=""
+                                                 width="20"
+                                                 class="rounded-circle">
+                                            {% endif %}
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <div class="d-flex align-items-center">
+                                        <a href="#" class="text-body">
+                                            <strong>{{ i.user.last_name }} {{ i.user.first_name }}</strong>
+                                        </a>
+                                        <small class="ml-auto text-muted">{{ i.date_add }}</small>
+                                    </div>
+                                    <a class="text-black-70"
+                                       href="{% url 'forum-thread' i.slug %}">
+                                        {{ i.titre }}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        {% else %}
+                        <div class="alert alert-info" role="alert">
+                            Il n'y a pas d'autres sujets 😣!!!
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info" role="alert">
+                        Aucun autre sujet lié n’a été trouvé.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container page__container">
+        <div class="footer">
+            Copyright &copy;
+            <a href="http://themeforest.net/item/learnplus-learning-management-application/15287372?ref=mosaicpro">
+                Purchase LearnPlus
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% block script %}
+<!-- Scripts Vue & Axios -->
+<script src="{% static 'assets/js/vue.js' %}"></script>
+<script src="{% static 'assets/js/axios.js' %}"></script>
+
+<script>
+new Vue({
+    el: '#reponse-add',
+    data: {
+        reponse: '',
+        isSubmitting: false,
+        isSuccess: false,
+        error: false,
+        message: '',
+        
+        // Récupération du slug depuis l'attribut data-forum-slug
+        forumSlug: document.getElementById('reponse-add').dataset.forumSlug,
+
+        // (Optionnel) Base URL pour Axios si besoin
+        base_url: window.location.protocol + '//' + window.location.host + '/'
+    },
+    methods: {
+        postReponse() {
+            if (this.isSubmitting) return;
+            this.isSubmitting = true;
+            this.isSuccess = false;
+            this.error = false;
+            this.message = '';
+
+            // Vérification basique côté client
+            if (!this.reponse.trim()) {
+                this.error = true;
+                this.message = 'Veuillez saisir une réponse.';
+                this.isSubmitting = false;
+                return;
+            }
+
+            // Préparation du FormData
+            const formData = new FormData();
+            formData.append('reponse', this.reponse);
+
+            // Configuration CSRF pour Django
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
+            // Envoi de la requête POST à l’URL de création de réponse
+            // À adapter selon votre routing (ici: 'forum_thread/<slug>/reponse')
+            axios.post(
+                this.base_url + 'student/forum_thread/' + this.forumSlug + '/reponse',
+                formData
+            )
+            .then(response => {
+                this.isSubmitting = false;
+
+                if (response.data.success) {
+                    this.isSuccess = true;
+                    this.message = response.data.message || 'Réponse enregistrée avec succès !';
+                    // On réinitialise le champ
+                    this.reponse = '';
+                    // Optionnel : recharger la page pour afficher la nouvelle réponse
+                    // location.reload();
+                } else {
+                    this.error = true;
+                    this.message = response.data.message || 'Une erreur s’est produite.';
+                }
+            })
+            .catch(err => {
+                this.isSubmitting = false;
+                this.error = true;
+                this.message = 'Erreur serveur ou réseau.';
+                console.error(err);
+            });
+        }
+    }
+});
+</script>
+{% endblock script %}

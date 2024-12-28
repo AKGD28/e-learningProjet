@@ -1,0 +1,269 @@
+{% extends 'bases/header_instructor.html' %}
+
+
+
+{% block style %}
+
+<!-- Flatpickr -->
+<link type="text/css" href="/static/assets/css/flatpickr.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/flatpickr.rtl.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/flatpickr-airbnb.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/flatpickr-airbnb.rtl.css" rel="stylesheet">
+
+<!-- Quill Theme -->
+<link type="text/css" href="/static/assets/css/quill.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/quill.rtl.css" rel="stylesheet">
+
+<!-- Nestable -->
+<link rel="stylesheet" href="/static/assets/css/nestable.css">
+<link rel="stylesheet" href="/static/assets/css/nestable.rtl.css">
+    
+{% endblock style %}
+    
+{% block content %}
+
+<div class="mdk-drawer-layout__content page ">
+
+    <div class="container-fluid page__container" id="courses-add">
+        {% csrf_token %}
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'instructor-courses' %}">Chapitre</a></li>
+            <li class="breadcrumb-item active">Ajouter un chapitre</li>
+        </ol>
+        <div class="media align-items-center mb-headings">
+            <div class="media-body">
+                <h1 class="h2">Information du chapitre</h1>
+            </div>
+            <div class="media-right">
+                <button  v-if="!isregister"  v-on:click.prevent="courses_add" class="btn btn-success">Enregistrer</button>
+                <button     v-if="isregister" disabled v-on:click.prevent="courses_add" class="btn btn-success">Enregistrer</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Informations de base</h4>
+                        <div v-if="isSuccess" class="alert alert-success" role="alert">
+                            ${ message }
+                        </div>
+                        <div v-if="error" class="alert alert-danger" role="alert">
+                            ${ message }
+                        </div>
+                    </div>
+                    <div class="card-body" >
+
+                        <div class="form-group">
+                            <label class="form-label" for="title">Titre</label>
+                            <input type="text" id="title" class="form-control" placeholder="Write a title" v-model="title">
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label class="form-label">Description</label>
+                            <textarea v-model="description" class="form-control" rows="5" placeholder="description du cours" >
+                            </textarea>
+                        </div>
+                        <br>
+                        <div class="form-group mb-0 custom-file">
+                            <label class="form-label">Image</label>
+                            <input v-on:change="handleImageUploaded" ref="files" type="file" accept="image/*" class="custom-file-input">
+                            <label for="image" class="custom-file-label">Choisissez votre image</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="custom-file">
+                        <input  v-on:change="handleFileUploaded" ref="file" type="file"  accept="video/*" class="custom-file-input" >
+                        <label for="video" class="custom-file-label">Présentation vidéo de cours </label>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Autres</h4>
+                        <p class="card-subtitle">informations</p>
+                    </div>
+
+                    <form class="card-body" action="#">
+                        <div class="form-group">
+                            <label class="form-label" for="category">Matiére</label>
+                            <select id="category" class="custom-select form-control" v-model="matiere"> 
+                                {% for ma in matiere %}
+                                    <option value="{{ ma.id }}">{{ ma.nom }}</option>
+                                {% endfor %}   
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="duration">Durée</label>
+                            <input type="text" id="duration" class="form-control" placeholder="durée en heure" v-model="duration" >
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="start">Date de debut</label>
+                            <input id="start" type="text" class="form-control" placeholder="Date de début"
+                                data-toggle="flatpickr" v-model="date_debut">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="end">Date de fin</label>
+                            <input id="end" type="text" class="form-control" placeholder="Date de fin"
+                                data-toggle="flatpickr" v-model="date_fin">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editLesson">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                // Edit Lesson
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock content %}
+
+
+
+{% block script %}
+
+
+<script src="/static/assets/js/axios.js"></script>
+
+<!-- vue -->
+<script src="/static/assets/js/vue.js"></script>
+
+<script>
+// Block Vue JS  
+new Vue({
+   
+  // id de la section ou vue js aura effet
+el: '#courses-add',
+    // end 
+    // varaible en rapport au v-model et variable permettant de traiter les erreurs
+data: {
+    title: '',
+    file : '',
+    image: '',
+    description:'',
+    date_fin:'',
+    date_debut:'',
+    matiere:'',
+    duration:'',
+   isregister: false,
+   loader: false,
+   isSuccess: false,
+   error: false,
+   base_url: window.location.protocol + "//" + window.location.host + "/",
+},
+    //end 
+delimiters: ["${", "}"],
+    
+    // code à effecter au chargement de la page (fonction,changement de variable...)
+mounted() { },
+    // les différentes fonctions 
+methods: {
+    courses_add: function () {
+        // vérification des données 
+       if (!this.isregister) {
+           this.error = false
+           this.isSuccess = false
+           this.isregister = true
+           if (this.title == "" || this.file == "" || this.description == "" || this.date_fin == "" || this.date_debut == "" || this.matiere == "" || this.duration == "" || this.image == "") {
+               this.message = "Veuillez remplir correctement les champs";
+               this.error = true
+               this.isSuccess = false
+               this.isregister = false;
+           } else {
+            //    permet d'imploder des fichiers
+               
+               // stocker les données 
+               let formData = new FormData();
+               formData.append('file', this.file);
+               formData.append('title', this.title);
+               formData.append('image', this.image);
+               formData.append('matiere', this.matiere);
+               formData.append('date_fin', this.date_fin);
+               formData.append('description', this.description);
+               formData.append('date_debut', this.date_debut);
+               formData.append('duration', this.duration);
+               
+               // post des données vers le back-end 
+               axios.defaults.xsrfCookieName = 'csrftoken'
+               axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+               axios.post(this.base_url + 'instructor/post_cours',
+                   formData,
+                   {
+                       headers: {
+                           'Content-Type': 'multipart/form-data',
+                       }
+                   
+                   // traitement sur les reponses 
+                   }).then(response => {
+                   console.log(response)
+                   this.isregister = false;
+                   
+                   
+                   // si tout s'est bien passé 
+                   if (response.data.success) {
+                       
+                       // permet d'afficher un message à l'ecran 
+                       this.isSuccess = true
+                       this.error = false
+                       this.message = response.data.message
+                       this.success = response.data.success
+                       // redirection 
+                       window.location.replace(this.base_url + 'instructor/courses');
+                       
+                       // en cas d'erreur 
+                   } else {
+                       this.error = true
+                       this.message = response.data.message
+                       this.success = response.data.success
+                       this.isSuccess = false
+                   }
+                   console.log("success variable" + this.isSuccess)
+                   // console.log("success variable"+this.error)
+               })
+                   .catch((err) => {
+                       this.isregister = false;
+                       console.log(err);
+                   })
+           }
+       }
+   },
+    
+    // recuperation des fichier 
+   handleFileUploaded() {
+        this.file = this.$refs.file.files[0];
+        console.log(this.file)
+    },
+    handleImageUploaded() {
+        this.image = this.$refs.files.files[0];
+        console.log(this.image)
+    },
+}
+});
+</script>
+<!-- Nestable -->
+<script src="/static/assets/vendor/jquery.nestable.js"></script>
+<script src="/static/assets/js/nestable.js"></script>
+
+<!-- Quill -->
+<script src="/static/assets/vendor/quill.min.js"></script>
+<script src="/static/assets/js/quill.js"></script>
+
+<!-- Flatpickr -->
+<script src="/static/assets/vendor/flatpickr/flatpickr.min.js"></script>
+<script src="/static/assets/js/flatpickr.js"></script>
+
+<!-- axios -->
+{% endblock script %}
+
+    

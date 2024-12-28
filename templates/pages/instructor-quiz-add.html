@@ -1,0 +1,144 @@
+{% extends 'bases/header_instructor.html' %}
+
+{% block style %}
+<!-- Touchspin -->
+<link rel="stylesheet" href="/static/assets/css/bootstrap-touchspin.css">
+<link rel="stylesheet" href="/static/assets/css/bootstrap-touchspin.rtl.css">
+<!-- Vendor CSS -->
+<link rel="stylesheet" href="/static/assets/css/nestable.css">
+<link rel="stylesheet" href="/static/assets/css/nestable.rtl.css">
+{% endblock style %}
+
+{% block content %}
+<!-- Header Layout Content -->
+<div class="mdk-drawer-layout__content page ">
+
+    <div class="container-fluid page__container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'instructor-quizzes' %}">Quiz Manager</a></li>
+            <li class="breadcrumb-item active">Add Quiz</li>
+        </ol>
+
+        <h1 class="h2">Add a new Quiz</h1>
+
+        <!-- Formulaire d'ajout d'un Quiz -->
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Basic</h4>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'instructor-quiz-add' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Quiz Title -->
+                    <div class="form-group row">
+                        <label for="quiz_title" class="col-sm-3 col-form-label form-label">Quiz Title:</label>
+                        <div class="col-sm-9">
+                            <input 
+                                id="quiz_title" 
+                                name="name" 
+                                type="text" 
+                                class="form-control" 
+                                placeholder="Title of the quiz"
+                                required
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Subject (optionnel) -->
+                    <div class="form-group row">
+                        <label for="subject_id" class="col-sm-3 col-form-label form-label">Subject:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <select 
+                                id="subject_id" 
+                                name="subject_id"
+                                class="custom-select form-control" 
+                                required
+                            >
+                                <option value="" disabled selected>-- Choose Subject --</option>
+                                {% for subject in subjects %}
+                                    <option value="{{ subject.id }}">{{ subject.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Course -->
+                    <div class="form-group row">
+                        <label for="course_title" class="col-sm-3 col-form-label form-label">Course:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <select 
+                                id="course_title" 
+                                name="cours_id"
+                                class="custom-select form-control"
+                                required
+                            >
+                                <option value="" disabled selected>-- Choose Course --</option>
+                                {% for cours in cours_list %}
+                                    <option value="{{ cours.id }}">{{ cours.titre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Image -->
+                    <div class="form-group row">
+                        <label for="quiz_image" class="col-sm-3 col-form-label form-label">Quiz Image:</label>
+                        <div class="col-sm-9 col-md-4">
+                            <p><img src="/static/assets/images/default_quiz.png" alt="" width="150" class="rounded"></p>
+                            <div class="custom-file">
+                                <input 
+                                    type="file" 
+                                    id="quiz_image" 
+                                    class="custom-file-input"
+                                    name="quiz_image"
+                                >
+                                <label for="quiz_image" class="custom-file-label">Choose file</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de validation -->
+                    <div class="form-group row mb-0">
+                        <div class="col-sm-9 offset-sm-3">
+                            <button type="submit" class="btn btn-success">Save</button>
+                            <a href="{% url 'instructor-quizzes' %}" class="btn btn-light ml-2">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Questions</h4>
+            </div>
+            <div class="card-body">
+                {% if quiz and quiz.id %}
+                    <!-- Bouton pour ajouter une question -->
+                    <a href="{% url 'question_add' quiz.id %}" class="btn btn-outline-secondary mb-3">
+                        Add Question <i class="material-icons">add</i>
+                    </a>
+                    
+                    <!-- Lien pour gérer les questions -->
+                    <a href="{% url 'quiz_edit_questions' quiz.id %}" class="btn btn-info mb-3 ml-2">
+                        Manage Questions
+                    </a>
+                {% else %}
+                    <p class="text-muted">
+                        Save the quiz before adding or managing questions.
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="/static/assets/vendor/jquery.nestable.js"></script>
+<script src="/static/assets/vendor/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/assets/js/nestable.js"></script>
+<script src="/static/assets/js/touchspin.js"></script>
+{% endblock script %}

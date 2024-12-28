@@ -1,0 +1,313 @@
+{% extends 'bases/student_header.html'%}
+{% block content %}
+
+            <div class="page ">
+                <div class="container page__container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'index_student' %}">Home</a></li>
+                        <li class="breadcrumb-item active">Forum</li>
+                    </ol>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                    
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <h4 class="card-title">General</h4>
+                                            <p class="card-subtitle">Forum Général.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                    
+                    
+                                <ul class="list-group list-group-fit">
+                    
+                    
+                                    {% for i in forum_general %}
+                    
+                                    <li class="list-group-item forum-thread">
+                                        <div class="media align-items-center">
+                                            <div class="media-left">
+                                                <div class="forum-icon-wrapper">
+                                                    <a href="{% url 'forum-thread' i.slug %}" class="forum-thread-icon">
+                                                        <i class="material-icons">description</i>
+                                                    </a>
+                                                    <a href="#" class="forum-thread-user">
+                                                        {% if i.user.student_user.get_u_type %}
+                                                        <img src="{{ i.user.student_user.photo.url }}" alt="" width="20" class="rounded-circle">
+                                                        {% elif i.user.instructor.get_u_type %}
+                                                        <img src="{{ i.user.instructor.photo.url }}" alt="" width="20" class="rounded-circle">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="d-flex align-items-center">
+                                                    <a href="#" class="text-body"><strong>{{ i.user.last_name }} {{ i.user.first_name }}</strong></a>
+                                                    <small class="ml-auto text-muted">{{ i.date_add }}</small>
+                                                </div>
+                                                <a class="text-black-70" href="{% url 'forum-thread' i.slug %}">{{ i.titre }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                    
+                                </ul>
+                            </div>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center pagination-sm ">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true" class="material-icons">chevron_left</span>
+                                            <span>Prev</span>
+                                        </a>
+                                    </li>
+                    
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#" aria-label="1">
+                                            <span>1</span>
+                                        </a>
+                                    </li>
+                    
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="2">
+                                            <span>2</span>
+                                        </a>
+                                    </li>
+                    
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span>Next</span>
+                                            <span aria-hidden="true" class="material-icons">chevron_right</span>
+                                        </a>
+                                    </li>
+                    
+                                </ul>
+                            </nav>
+                            <br>
+                    
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-body">
+                                            <h4 class="card-title">Lessons</h4>
+                                            <p class="card-subtitle">Forum des cours.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                    
+                    
+                                <ul class="list-group list-group-fit">
+                    
+                    
+                                    {% for i in forum  %}
+                    
+                                    <li class="list-group-item forum-thread">
+                                        <div class="media align-items-center">
+                                            <div class="media-left">
+                                                <div class="forum-icon-wrapper">
+                                                    <a href="{% url 'forum-thread' i.slug %}" class="forum-thread-icon">
+                                                        <i class="material-icons">description</i>
+                                                    </a>
+                                                    <a href="{% url 'instructor-profile' %}" class="forum-thread-user">
+                                                        {% if i.user.student_user.get_u_type  %}
+                                                        <img src="{{ i.user.student_user.photo.url}}" alt="{{ i.user.last_name }}" width="20" class="rounded-circle">
+                                                        {% elif i.user.instructor.get_u_type  %}
+                                                        <img src="{{ i.user.instructor.photo.url}}" alt="{{ i.user.last_name }}" width="20" class="rounded-circle">
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="d-flex align-items-center">
+                                                    <a href="#" class="text-body"><strong>{{ i.user.last_name }} {{ i.user.first_name }}</strong></a>
+                                                    <small class="ml-auto text-muted">{{ i.date_add }}</small>
+                                                </div>
+                                                <a class="text-black-70" href="{% url 'forum-thread' i.slug %}">{{ i.titre }}</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    {% endfor %}
+                    
+                    
+                                </ul>
+                            </div>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center pagination-sm ">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true" class="material-icons">chevron_left</span>
+                                            <span>Prev</span>
+                                        </a>
+                                    </li>
+                    
+                                    <li class="page-item active">
+                                        <a class="page-link" href="#" aria-label="1">
+                                            <span>1</span>
+                                        </a>
+                                    </li>
+                    
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="2">
+                                            <span>2</span>
+                                        </a>
+                                    </li>
+                    
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span>Next</span>
+                                            <span aria-hidden="true" class="material-icons">chevron_right</span>
+                                        </a>
+                                    </li>
+                    
+                                </ul>
+                            </nav>
+                    
+                    
+                    
+                    
+                        </div>
+                        <div class="col-md-6">
+                    
+                            <form action="#" id="forum-add">
+                                <div v-if="isSuccess" class="alert alert-success" role="alert">
+                                    ${ message }
+                                </div>
+                                <div v-if="error" class="alert alert-danger" role="alert">
+                                    ${ message }
+                                </div>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="form-group m-0" role="group" aria-labelledby="label-question">
+                                            <div class="form-row align-items-center">
+                                                <label id="label-question" for="question"
+                                                    class="col-md-3 col-form-label form-label">Titre</label>
+                                                <div class="col-md-9">
+                                                    <input v-model="titre" type="text" placeholder="Titre de votre question"
+                                                        class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                    
+                                <div class="card">
+                                    <div class="list-group list-group-fit">
+                                        <div class="list-group-item">
+                                            <div role="group" aria-labelledby="label-question" class="m-0 form-group">
+                                                <div class="form-row">
+                                                    <label id="label-question" for="question"
+                                                        class="col-md-3 col-form-label form-label">Votre
+                                                        Note</label>
+                                                    <div class="col-md-9">
+                                                        <textarea v-model="question" placeholder="Quelle est votre préocupation" rows="4"
+                                                            class="form-control"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="list-group-item">
+                                            <button v-if="!isregister" v-on:click.prevent="post_forum" type="button"
+                                                class="btn btn-success">Laisser une note</button>
+                                            <button v-if="isregister" disabled type="button" class="btn btn-success">Laisser une
+                                                note</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                    
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container page__container">
+                    <div class="footer">
+                        Copyright &copy; 2016 - <a href="http://themeforest.net/item/learnplus-learning-management-application/15287372?ref=mosaicpro">Purchase LearnPlus</a>
+                    </div>
+                </div>
+            </div>
+
+    {% endblock content %}
+
+
+    {% block script %}
+    
+    <script src="/static/assets/js/axios.js"></script>
+    
+    <!-- vue -->
+    <script src="/static/assets/js/vue.js"></script>
+    
+    <script>
+        // Block Vue JS  
+        new Vue({
+            el: '#forum-add',
+            data: {
+                titre: '',
+                question: '',
+                isregister: false,
+                loader: false,
+                isSuccess: false,
+                error: false,
+                base_url: window.location.protocol + "//" + window.location.host + "/",
+            },
+            delimiters: ["${", "}"],
+            mounted() { },
+            methods: {
+                post_forum: function () {
+                    if (!this.isregister) {
+                        this.error = false
+                        this.isSuccess = false
+                        this.isregister = true
+                        if (this.titre == "" || this.question == "") {
+                            this.message = "Veuillez remplir correctement les champs";
+                            this.error = true
+                            this.isSuccess = false
+                            this.isregister = false;
+                        } else {
+                            //    permet d'imploder des fichiers
+                            let formData = new FormData();
+                            formData.append('titre', this.titre);
+                            formData.append('question', this.question);
+                            axios.defaults.xsrfCookieName = 'csrftoken'
+                            axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+                            axios.post(this.base_url + 'student/post_forum_g',
+                                formData,
+                                {
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data',
+                                    }
+                                }).then(response => {
+                                    console.log(response)
+                                    this.isregister = false;
+                                    if (response.data.success) {
+                                        this.isSuccess = true
+                                        this.error = false
+                                        this.message = response.data.message
+                                        this.success = response.data.success
+                                        this.titre = ""
+                                        this.question = ""
+                                        window.location.replace(this.base_url + 'student/forum_thread/' + response.data.forum);
+                                    } else {
+                                        this.error = true
+                                        this.message = response.data.message
+                                        this.success = response.data.success
+                                        this.isSuccess = false
+                                    }
+                                    console.log("success variable" + this.isSuccess)
+                                    // console.log("success variable"+this.error)
+                                })
+                                .catch((err) => {
+                                    this.isregister = false;
+                                    console.log(err);
+                                })
+                        }
+                    }
+                },
+            }
+        });
+    </script>
+    {% endblock script %}

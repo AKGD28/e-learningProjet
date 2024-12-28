@@ -1,0 +1,114 @@
+{% extends 'bases/header_instructor.html' %}
+{% block content %}
+
+        <!-- Header Layout Content -->
+                <div class="mdk-drawer-layout__content page ">
+
+                    <div class="container-fluid page__container">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="instructor-dashboard.html">Home</a></li>
+                            <li class="breadcrumb-item active">Profile</li>
+                        </ol>
+
+                        <div class="text-center">
+                            
+                            <h1 class="h2 mb-0 mt-1">{{user.first_name}} {{user.last_name}} </h1>
+                            <p class="lead text-muted mb-0">{{user.username}}</p>
+                            <div class="badge badge-primary ">INSTRUCTOR</div>
+                            <hr>
+                            <h5 class="text-muted mb-1">Email: {{user.email}}</h5>
+                            
+                        </div>
+                        <hr>
+                        <h4>Courses by {{user.last_name}}</h4>
+                        <div class="card-columns">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-left">
+                                            <a href="instructor-take-course.html">
+                                                <img src="/static/assets/images/vuejs.png" alt="Card image cap" width="100" class="rounded">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="card-title mb-0"><a href="instructor-take-course.html">Learn VueJs</a></h4>
+                                            <div class="rating">
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star_border</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-left">
+                                            <a href="instructor-take-course.html">
+                                                <img src="/static/assets/images/nodejs.png" alt="Card image cap" width="100" class="rounded">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="card-title mb-0"><a href="instructor-take-course.html">Npm &amp; Gulp Advanced Workflow</a></h4>
+                                            <div class="rating">
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star_border</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-left">
+                                            <a href="instructor-take-course.html">
+                                                <img src="/static/assets/images/github.png" alt="Card image cap" width="100" class="rounded">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="card-title mb-0"><a href="instructor-take-course.html">Github Webhooks for Beginners</a></h4>
+                                            <div class="rating">
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star_border</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-left">
+                                            <a href="instructor-take-course.html">
+                                                <img src="/static/assets/images/gulp.png" alt="Card image cap" width="100" class="rounded">
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="card-title mb-0"><a href="instructor-take-course.html">Gulp &amp; Slush Workflows</a></h4>
+                                            <div class="rating">
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star</i>
+                                                <i class="material-icons">star_border</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+    {% endblock content %}

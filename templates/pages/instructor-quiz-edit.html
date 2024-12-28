@@ -1,0 +1,171 @@
+{% extends 'bases/header_instructor.html' %}
+
+{% block content %}
+<div class="container-fluid page__container">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard' %}">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'instructor-quizzes' %}">Quiz Manager</a>
+        </li>
+        <li class="breadcrumb-item active">Edit Quiz</li>
+    </ol>
+
+    <h1 class="h2">Edit Quiz: {{ quiz.name }}</h1>
+
+    <!-- Formulaire d’édition -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Quiz Information</h4>
+        </div>
+        <div class="card-body">
+            <form action="{% url 'instructor-quiz-edit' quiz.id %}" 
+                  method="POST" 
+                  enctype="multipart/form-data"
+                  class="mb-0">
+                {% csrf_token %}
+
+                <!-- Nom du quiz -->
+                <div class="form-group row">
+                    <label for="quiz_name" class="col-sm-3 col-form-label form-label">
+                        Quiz Title:
+                    </label>
+                    <div class="col-sm-9">
+                        <input 
+                            type="text" 
+                            name="name"
+                            id="quiz_name"
+                            class="form-control"
+                            value="{{ quiz.name }}"
+                            placeholder="Enter quiz title"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <!-- Sélection du sujet (Subject) -->
+                <div class="form-group row">
+                    <label for="subject_id" class="col-sm-3 col-form-label form-label">
+                        Subject:
+                    </label>
+                    <div class="col-sm-9 col-md-4">
+                        <select 
+                            id="subject_id"
+                            name="subject_id"
+                            class="custom-select form-control"
+                        >
+                            <option value="" disabled>-- Choose a Subject --</option>
+                            {% for subject in subjects %}
+                                <option 
+                                    value="{{ subject.id }}"
+                                    {% if quiz.subject and quiz.subject.id == subject.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ subject.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Sélection du cours (Cours) -->
+                <div class="form-group row">
+                    <label for="cours_id" class="col-sm-3 col-form-label form-label">
+                        Course:
+                    </label>
+                    <div class="col-sm-9 col-md-4">
+                        <select 
+                            id="cours_id"
+                            name="cours_id"
+                            class="custom-select form-control"
+                        >
+                            <option value="" disabled>-- Choose a Course --</option>
+                            {% for c in cours_list %}
+                                <option 
+                                    value="{{ c.id }}"
+                                    {% if quiz.cours and quiz.cours.id == c.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ c.titre }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Image du quiz (optionnel) -->
+                <div class="form-group row">
+                    <label for="quiz_image" class="col-sm-3 col-form-label form-label">
+                        Quiz Image:
+                    </label>
+                    <div class="col-sm-9 col-md-4">
+                        {% if quiz.image %}
+                            <p>
+                                <img 
+                                    src="{{ quiz.image.url }}" 
+                                    alt="Quiz Image"
+                                    width="150"
+                                    class="rounded"
+                                >
+                            </p>
+                        {% endif %}
+                        <div class="custom-file">
+                            <input 
+                                type="file" 
+                                class="custom-file-input"
+                                name="quiz_image"
+                                id="quiz_image"
+                            >
+                            <label for="quiz_image" class="custom-file-label">
+                                Choose file
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boutons d'action -->
+                <div class="form-group row mb-0">
+                    <div class="col-sm-9 offset-sm-3">
+                        <button type="submit" class="btn btn-success">
+                            Save
+                        </button>
+                        <a href="{% url 'instructor-quizzes' %}" class="btn btn-light ml-2">
+                            Cancel
+                        </a>
+                    </div>
+                </div>
+            </form> 
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h4 class="card-title mb-0">Questions</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Bouton pour ajouter une question -->
+                    <a href="{% url 'question_add' quiz.id %}" class="btn btn-outline-secondary mb-3">
+                        Add Question <i class="material-icons">add</i>
+                    </a>
+            
+                    <!-- Lien pour gérer les questions -->
+                    <a href="{% url 'quiz_edit_questions' quiz.id %}" class="btn btn-info mb-3 ml-2">
+                        Manage Questions
+                    </a>
+            
+                    <p class="text-muted">
+                        Use the buttons above to add or manage questions for this quiz.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script src="/static/assets/vendor/jquery.nestable.js"></script>
+<script src="/static/assets/vendor/jquery.bootstrap-touchspin.js"></script>
+<script src="/static/assets/js/nestable.js"></script>
+<script src="/static/assets/js/touchspin.js"></script>
+{% endblock script %}

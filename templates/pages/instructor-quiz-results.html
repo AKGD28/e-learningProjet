@@ -1,0 +1,74 @@
+{% extends 'bases/header_instructor.html' %}
+{% block content %}
+
+<div class="container-fluid page__container">
+    <!-- Fil d’Ariane -->
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'instructor-quizzes' %}">Quiz Manager</a></li>
+        <li class="breadcrumb-item active">Quiz Results</li>
+    </ol>
+
+    <h1 class="h2">{{ quiz.name }} - Results</h1>
+
+    <!-- Statistiques globales -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <p>
+                <strong>Total attempts:</strong> {{ total_taken_quizzes }}
+            </p>
+            <p>
+                <strong>Average score:</strong>
+                {% if quiz_score %}
+                    {{ quiz_score|floatformat:2 }}
+                {% else %}
+                    0
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <!-- Liste de toutes les tentatives (TakenQuiz) -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Students Attempts</h4>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm table-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Score</th>
+                        <th>Percentage</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attempt in taken_quizzes %}
+                    <tr>
+                        <td>
+                            {{ attempt.student.user.username }}
+                            {# Ou attempt.student.user.get_full_name #}
+                        </td>
+                        <td>{{ attempt.score }}</td>
+                        <td>
+                            {{ attempt.percentage|floatformat:2 }}%
+                        </td>
+                        <td>
+                            {{ attempt.date|date:"M j, Y H:i" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">
+                            No attempts yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

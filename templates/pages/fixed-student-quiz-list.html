@@ -1,0 +1,83 @@
+{% extends 'bases/student_header.html' %}
+{% block content %}
+
+<div class="page">
+    <div class="container page__container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index_student' %}">Home</a></li>
+            <li class="breadcrumb-item active">Quiz List</li>
+        </ol>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h4 class="card-title">Search</h4>
+                        <p>Search through your quizzes below. Enter a keyword to filter the list.</p>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="table-responsive border-bottom" data-toggle="lists" data-lists-values='["js-lists-values-employee-name"]'>
+                            <div class="search-form search-form--light mb-3">
+                                <input type="text" class="form-control search" placeholder="Search">
+                                <button class="btn" type="button" role="button"><i class="material-icons">search</i></button>
+                            </div>
+
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th>Quiz Name</th>
+                                        <th>Last Updated</th>
+                                        <th>Subject</th>
+                                        <th style="width: 24px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="list" id="search">
+                                    {% for quiz_item in quizzes %}
+                                    <tr>
+                                        <td>
+                                            <span class="js-lists-values-employee-name">{{ quiz_item.quiz.name }}</span>
+                                        </td>
+                                        <td>
+                                            <small class="text-muted">{{ quiz_item.quiz.date_update|date:"F j, Y, g:i a" }}</small>
+                                        </td>
+                                        <td>
+                                            <span class="badge" style="background-color: {{ quiz_item.quiz.subject.color }}">
+                                                {{ quiz_item.quiz.subject.name }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if not quiz_item.has_taken %}
+                                            <a href="{% url 'take_quiz' quiz_item.quiz.id %}" class="btn btn-sm btn-primary">
+                                                Take Quiz
+                                            </a>
+                                            {% else %}
+                                            <a href="{{ quiz_item.result_url }}" class="btn btn-sm btn-success">
+                                                Quiz Results
+                                            </a>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="text-center">
+                                            No quizzes available.
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container page__container">
+            <div class="footer">
+                Copyright &copy; 2024 - <a href="http://example.com">Your Site</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

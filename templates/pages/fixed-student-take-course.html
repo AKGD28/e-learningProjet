@@ -1,0 +1,87 @@
+{% extends 'bases/student_header.html'%}
+{% block content %}
+
+            <div class="page ">
+
+                <div class="container page__container">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'index_student' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'my-courses'%}">Courses</a></li>
+                        <li class="breadcrumb-item active">{{cours.titre}}</li>
+                    </ol>
+                    <h1 class="h2">{{cours.titre}}</h1> 
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="{{cours.video.url}}" allowfullscreen=""></iframe>
+                                </div>
+                                <div class="card-body">
+                                    {{ cours.description}}
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="media align-items-center">
+                                        <div class="media-left">
+                                            <img src="{{instructor.photo.url}}" alt="About Adrian" width="50" class="rounded-circle">
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="card-title"><a href="{% url 'instructor-profile' %}">{{instructor.user.first_name}} {{instructor.user.last_name}}</a></h4>
+                                            <p class="card-subtitle">Instructor</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p>{{instructor.contact}}<br>{{instructor.adresse}}</p>
+                                    <a href="#" class="btn btn-light"><i class="fab fa-facebook"></i></a>
+                                    <a href="#" class="btn btn-light"><i class="fab fa-twitter"></i></a>
+                                    <a href="#" class="btn btn-light"><i class="fab fa-github"></i></a>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <ul class="list-group list-group-fit">
+                                    <li class="list-group-item">
+                                        <div class="media align-items-center">
+                                            <div class="media-left">
+                                                <i class="material-icons text-muted-light">schedule</i>
+                                            </div>
+                                            <div class="media-body">
+                                                &nbsp; {{ cours.date_add }} 
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+            
+                            <a href="{% url 'forum-lesson' cours.slug %}" class="btn btn-default btn-block">
+                                <i class="material-icons btn__icon--left">forum</i> Forum
+                            </a>
+                            <a href="#" class=" text-white btn btn-block bg-success">
+                                Quiz
+                            </a>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="{{cours.pdf.url}}" allowfullscreen=""></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container page__container">
+                    <div class="footer">
+                        Copyright &copy; 2016 - <a href="http://themeforest.net/item/learnplus-learning-management-application/15287372?ref=mosaicpro">Purchase LearnPlus</a>
+                    </div>
+                </div>
+            </div>
+    {% endblock content %} 

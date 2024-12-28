@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Instructor Dashboard</title>
+
+    <!-- Prevent the demo from appearing in search engines (REMOVE THIS) -->
+    <meta name="robots" content="noindex">
+
+    <!-- Perfect Scrollbar -->
+    <link type="text/css" href="/static/assets/vendor/perfect-scrollbar.css" rel="stylesheet">
+
+    <!-- Material Design Icons -->
+    <link type="text/css" href="/static/assets/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="/static/assets/css/material-icons.rtl.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link type="text/css" href="/static/assets/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="/static/assets/css/fontawesome.rtl.css" rel="stylesheet">
+
+    <!-- App CSS -->
+    <link type="text/css" href="/static/assets/css/app.css" rel="stylesheet">
+    <link type="text/css" href="/static/assets/css/app.rtl.css" rel="stylesheet">
+
+    {% block style %}
+
+    {% endblock style %}
+        
+</head>
+
+<body class="layout-fluid">
+
+
+    <div class="preloader">
+        <div class="sk-double-bounce">
+            <div class="sk-child sk-double-bounce1"></div>
+            <div class="sk-child sk-double-bounce2"></div>
+        </div>
+    </div>
+
+    <!-- Header Layout -->
+    <div class="mdk-header-layout js-mdk-header-layout">
+
+        <!-- Header -->
+
+        {% include 'bases/includes/header_top.html' %}
+
+
+        <!-- // END Header -->
+        <!-- Header Layout Content -->
+
+        <div class="mdk-header-layout__content">
+
+            <div data-push data-responsive-width="992px" class="mdk-drawer-layout js-mdk-drawer-layout">
+               
+               {% block content %}
+                   
+
+               {% endblock content %}
+                   
+
+
+                <!-- Navsidebar -->
+                {% include 'bases/includes/navsidebar.html' %}
+                <!-- left side bar -->
+
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- jQuery -->
+    
+    <script src="/static/assets/vendor/jquery.min.js"></script>
+
+    
+    <!-- Bootstrap -->
+    <script src="/static/assets/vendor/popper.min.js"></script>
+    <script src="/static/assets/vendor/bootstrap.min.js"></script>
+
+    <!-- Perfect Scrollbar -->
+    <script src="/static/assets/vendor/perfect-scrollbar.min.js"></script>
+
+    <!-- MDK -->
+    <script src="/static/assets/vendor/dom-factory.js"></script>
+    <script src="/static/assets/vendor/material-design-kit.js"></script>
+
+    <!-- App JS -->
+    <script src="/static/assets/js/app.js"></script>
+
+    <!-- Highlight.js -->
+    <script src="/static/assets/js/hljs.js"></script>
+
+    <!-- App Settings (safe to remove) -->
+    <script src="/static/assets/js/app-settings.js"></script>
+
+    <!-- Global Settings -->
+    <script src="/static/assets/js/settings.js"></script>
+
+    <!-- Moment.js -->
+    <script src="/static/assets/vendor/moment.min.js"></script>
+    <script src="/static/assets/vendor/moment-range.min.js"></script>
+
+    <!-- Chart.js -->
+    <script src="/static/assets/vendor/Chart.min.js"></script>
+
+    <!-- UI Charts Page JS -->
+    <script src="/static/assets/js/chartjs-rounded-bar.js"></script>
+    <script src="/static/assets/js/chartjs.js"></script>
+
+    <!-- Chart.js Samples -->
+    <script src="/static/assets/js/page.instructor-dashboard.js"></script>
+
+    <!-- List.js -->
+    <script src="/static/assets/vendor/list.min.js"></script>
+    <script src="/static/assets/js/list.js"></script>
+    <!-- <script src="/static/assets/js/font-awesome.min.js"></script> -->
+        
+    {% block script %}
+    
+    {% endblock script %}
+</body>
+
+</html>

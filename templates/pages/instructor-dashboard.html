@@ -1,0 +1,62 @@
+{% extends 'bases/header_instructor.html' %}           
+            {% block content %}                 
+                <div class="mdk-drawer-layout__content page ">
+                    <div class="container-fluid page__container">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="student-dashboard.html">Home</a></li>
+                            <li class="breadcrumb-item active">Courses</li>
+                        </ol>
+                        <div class="media align-items-center mb-headings">
+                            <div class="media-body">
+                                <h1 class="h2">Courses</h1>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="card-columns">
+                            
+                            {% for i in matiere %}
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <h4 class="card-title mb-0"><a href="{% url 'instructor-matiere' i.slug %}">{{ i.nom }}</a></h4>
+                                </div>
+                                <a href="{% url 'instructor-matiere' i.slug %}">
+                                    <img src="{{i.image.url}}" alt="Card image cap" style="width:100%;">
+                                </a>
+                                <div class="card-body">
+                                    {{ i.description }}<br>
+                                </div>
+                            </div>
+                                
+                            {% endfor %}
+                        </div>
+                    
+                        <!-- Pagination -->
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true" class="material-icons">chevron_left</span>
+                                    <span>Prev</span>
+                                </a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="#" aria-label="1">
+                                    <span>1</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="1">
+                                    <span>2</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span>Next</span>
+                                    <span aria-hidden="true" class="material-icons">chevron_right</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    
+
+                </div>
+            {% endblock content %}

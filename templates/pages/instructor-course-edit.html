@@ -1,0 +1,297 @@
+{% extends 'bases/header_instructor.html' %}
+
+
+
+{% block style %}
+
+<!-- Flatpickr -->
+<link type="text/css" href="/static/assets/css/flatpickr.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/flatpickr.rtl.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/flatpickr-airbnb.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/flatpickr-airbnb.rtl.css" rel="stylesheet">
+
+<!-- Quill Theme -->
+<link type="text/css" href="/static/assets/css/quill.css" rel="stylesheet">
+<link type="text/css" href="/static/assets/css/quill.rtl.css" rel="stylesheet">
+
+<!-- Nestable -->
+<link rel="stylesheet" href="/static/assets/css/nestable.css">
+<link rel="stylesheet" href="/static/assets/css/nestable.rtl.css">
+    
+{% endblock style %}
+    
+{% block content %}
+
+<div class="mdk-drawer-layout__content page ">
+
+    <div class="container-fluid page__container" id="courses-add">
+        {% csrf_token %}
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'instructor-courses' %}">Chapitre</a></li>
+            <li class="breadcrumb-item active">Mofication de chapitre</li>
+        </ol>
+        <div class="media align-items-center mb-headings">
+            <div class="media-body">
+                <h1 class="h2">Editer le chapitre</h1>
+            </div>
+            <div class="media-right">
+                <a href="#" v-if="!isregister"  v-on:click.prevent="courses_add" class="btn btn-success">Enregistrer</a>
+                <button  href="#"   v-if="isregister" disabled v-on:click.prevent="courses_add" class="btn btn-success">Enregistrer</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Informations basiques</h4>
+                        <div v-if="isSuccess" class="alert alert-success" role="alert">
+                            ${ message }
+                        </div>
+                        <div v-if="error" class="alert alert-danger" role="alert">
+                            ${ message }
+                        </div>
+                    </div>
+                    <div class="card-body" >
+
+                        <div class="form-group">
+                            <label class="form-label" for="title">Titre</label>
+                            <input type="text" id="title" class="form-control" placeholder="Write a title" v-model="title">
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label class="form-label">Description</label>
+                            <textarea v-model="description" class="form-control" rows="5" placeholder="description du cours" >
+                            </textarea>
+                        </div>
+                        <br>
+                        <label class="form-label">Image</label>
+                        <br>
+                        <p>valeur actuelle</p>
+                        <div class="media-left">
+                        <img :src="image" width="100" class="rounded" alt="image">
+                        </div>
+                        <div class="form-group mb-0 custom-file">
+                            <input v-on:change="handleImageUploaded" ref="files" type="file" accept="image/*" class="custom-file-input">
+                            <label for="file" class="custom-file-label">Choisissez votre image</label>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Leçons</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- <p><a href="" class="btn btn-primary">Add Lesson <i
+                                    class="material-icons">add</i></a></p> -->
+                        <div class="nestable" id="nestable-handles-primary">
+                            <ul class="nestable-list">
+                                
+                                {% for l in chapitre.cours_chapitre.all %}
+                                    
+                                <li class="nestable-item nestable-item-handle" data-id="2">
+                                    <div class="nestable-content">
+                                        <div class="media align-items-center">
+                                            <div class="media-left">
+                                                <img src="{{l.image.url}}" alt="" width="100" class="rounded">
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="card-title h6 mb-0">
+                                                    <a href="">{{l.titre}}</a>
+                                                </h5>
+                                                <small class="text-muted">{{l.date_update}}</small>
+                                            </div>
+                                            <div class="media-right">
+                                                <a href="{% url 'instructor-lesson-edit' chapitre.id l.slug %}" class="btn btn-white btn-sm"><i
+                                                        class="material-icons">edit</i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="embed-responsive embed-responsive-16by9">
+                        <iframe class="embed-responsive-item"
+                            src="{{ chapitre.video.url }}" 
+                            allowfullscreen=""></iframe>
+                    </div>
+                    <div class="custom-file">
+                        <input id="file" v-on:change="handleFileUploaded" ref="file" type="file"  accept="video/*" class="custom-file-input" >
+                        <label for="file" class="custom-file-label">Présentation vidéo de cours </label>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Meta</h4>
+                        <p class="card-subtitle">Extra Options </p>
+                    </div>
+
+                    <form class="card-body" action="#">
+                        <div class="form-group">
+                            <label class="form-label" for="category">Matiére</label>
+                            <select id="category" class="custom-select form-control" v-model="matiere"> 
+                                {% for ma in matiere %}
+                                <option value="{{ ma.id }}">{{ ma.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <p class="" for="category">Valeur actuelle :  ${ matiere }</p>
+                        <div class="form-group">
+                            <label class="form-label" for="duration">Duration</label>
+                            <input type="text" id="duration" class="form-control" placeholder="durée en heure" v-model="duration" >
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="start">Start Date</label>
+                            <input id="start" type="text" class="form-control" placeholder="Date de début"
+                                data-toggle="flatpickr" v-model="date_debut">
+                            
+                        </div>
+                        <p class="" for="category">Valeur actuelle : ${ date_debut }</p>
+                        <div class="form-group">
+                            <label class="form-label" for="end">End Date</label>
+                            <input id="end" type="text" class="form-control" placeholder="Date de fin"
+                                data-toggle="flatpickr" v-model="date_fin">
+                        </div>
+                        <p class="" for="category">Valeur actuelle : ${ date_fin }</p>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editLesson">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                // Edit Lesson
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% endblock content %}
+
+
+
+{% block script %}
+
+
+<script src="/static/assets/js/axios.js"></script>
+
+<!-- vue -->
+<script src="/static/assets/js/vue.js"></script>
+
+<script>
+// Block Vue JS  
+new Vue({
+el: '#courses-add',
+data: {
+    title: '{{ chapitre.titre }}',
+    file : '{{ chapitre.video.url }}',
+    description:`{{ chapitre.description }}`,
+    image: '{{ chapitre.image.url }}',
+    date_fin: '{{ chapitre.date_fin }}',
+    date_debut: '{{ chapitre.date_debut }}',
+    matiere: '{{ chapitre.matiere.id }}',
+    duration: '{{ chapitre.duree_en_heure }}',
+    id: '{{ chapitre.id }}',
+   isregister: false,
+   loader: false,
+   isSuccess: false,
+   error: false,
+   base_url: window.location.protocol + "//" + window.location.host + "/",
+},
+delimiters: ["${", "}"],
+mounted() { },
+methods: {
+    courses_add: function () {
+       if (!this.isregister) {
+           this.error = false
+           this.isSuccess = false
+           this.isregister = true
+           if (this.title == "{{ chapitre.titre }}" && this.file == "{{ chapitre.file.url }}" && this.description == `{{ chapitre.description }}` && this.date_fin == "{{ chapitre.date_fin }}" && this.date_debut == "{{ chapitre.date_debut }}" && this.matiere == "{{ chapitre.matiere.id }}" && this.duration == "{{ chapitre.duration }}" && this.image == "{{ chapitre.image.url }}") {
+               this.message = "Aucun changement";
+               this.error = true;
+               this.isSuccess = false;
+               this.isregister = false;
+           } else {
+            //    permet d'imploder des fichiers
+               let formData = new FormData();
+               formData.append('file', this.file);
+               formData.append('title', this.title);
+               formData.append('id', this.id);
+               formData.append('image', this.image);
+               formData.append('matiere', this.matiere);
+               formData.append('date_fin', this.date_fin);
+               formData.append('description', this.description);
+               formData.append('date_debut', this.date_debut);
+               formData.append('duration', this.duration);
+               axios.defaults.xsrfCookieName = 'csrftoken'
+               axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+               axios.post(this.base_url + 'instructor/post_cours',
+                   formData,
+                   {
+                       headers: {
+                           'Content-Type': 'multipart/form-data',
+                       }
+                   }).then(response => {
+                   console.log(response)
+                   this.isregister = false;
+                   if (response.data.success) {
+                       this.isSuccess = true
+                       this.error = false
+                       this.message = response.data.message
+                       this.success = response.data.success
+                       window.location.replace(this.base_url + 'instructor/courses');
+                   } else {
+                       this.error = true
+                       this.message = response.data.message
+                       this.success = response.data.success
+                       this.isSuccess = false
+                   }
+                   console.log("success variable" + this.isSuccess)
+                   // console.log("success variable"+this.error)
+               })
+                   .catch((err) => {
+                       this.isregister = false;
+                       console.log(err);
+                   })
+           }
+       }
+   },
+   handleFileUploaded() {
+        this.file = this.$refs.file.files[0];
+        console.log(this.file)
+    },
+    handleImageUploaded() {
+        this.image = this.$refs.files.files[0];
+        console.log(this.image)
+    },
+}
+});
+</script>
+<!-- Nestable -->
+<script src="/static/assets/vendor/jquery.nestable.js"></script>
+<script src="/static/assets/js/nestable.js"></script>
+
+<!-- Quill -->
+<script src="/static/assets/vendor/quill.min.js"></script>
+<script src="/static/assets/js/quill.js"></script>
+
+<!-- Flatpickr -->
+<script src="/static/assets/vendor/flatpickr/flatpickr.min.js"></script>
+<script src="/static/assets/js/flatpickr.js"></script>
+
+<!-- axios -->
+{% endblock script %}
+
+    

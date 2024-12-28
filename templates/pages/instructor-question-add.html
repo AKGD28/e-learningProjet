@@ -1,0 +1,52 @@
+{% extends 'bases/header_instructor.html' %}
+{% block content %}
+
+<div class="container-fluid page__container">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="{% url 'dashboard' %}">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'instructor-quizzes' %}">Quiz Manager</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'quiz_edit_questions' quiz.id %}">
+                Manage Questions
+            </a>
+        </li>
+        <li class="breadcrumb-item active">Add Question</li>
+    </ol>
+
+    <h1 class="h2">Add a new question to {{ quiz.name }}</h1>
+
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title mb-0">Question</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="question_text">Question Text</label>
+                    <textarea 
+                        id="question_text"
+                        name="text"
+                        rows="4"
+                        class="form-control"
+                        placeholder="Enter your question..."
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Save Question
+                </button>
+                <a href="{% url 'quiz_edit_questions' quiz.id %}" class="btn btn-light ml-2">
+                    Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

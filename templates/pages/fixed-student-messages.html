@@ -1,0 +1,236 @@
+{% extends 'bases/header_message.html'%}
+
+{% block content %}
+
+            <div class="page ">
+
+
+
+                <div class="app-messages__container d-flex flex-column h-100 pb-4">
+                    <div class="navbar navbar-light bg-white navbar-expand-sm navbar-shadow z-1">
+                        <div class="container flex-wrap px-sm-0">
+                            <div class="nav py-2">
+                                <div class="nav-item align-items-center mr-3">
+                                    <div class="d-flex flex-column" style="max-width: 200px; font-size: 15px">
+                                        <strong class="text-body">{{ user.student_user.classe }}</strong>
+                                        <span class="text-muted text-ellipsis">Chat de classe</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-2 flex d-flex align-items-center">
+                                <div class="flex search-form form-control-rounded search-form--light" style="min-width: 200px;">
+                                </div>
+                                <button data-target="#messages-drawer" class="navbar-toggler d-block ml-3 p-0" data-toggle="sidebar" type="button">
+                                    <i class="material-icons">people_outline</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex pt-4" style="position: relative;" data-perfect-scrollbar>
+                        <div class="container page__container">
+                            <ul class="d-flex flex-column list-unstyled" id="chat-log">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="container page__container">
+                        <form action="#" id="message-reply">
+                            <div class="input-group input-group-merge">
+                                <input type="text" id="chat-message-input" class="form-control form-control-appended" autofocus="" required=""
+                                    placeholder="Ecrire un message">
+                                <div class="input-group-append">
+                                    <div class="input-group-text pr-2">
+                                        <button class="btn btn-flush" type="button"><i id="chat-message-submit" class="material-icons">send</i></button>
+                                    </div>
+                                
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+    {% endblock content %}
+
+    
+    {% block online %}
+        <div class="mdk-drawer js-mdk-drawer" data-align="end" id="messages-drawer">
+            <div class="mdk-drawer__content ">
+                <div class="sidebar sidebar-right sidebar-light bg-white o-hidden">
+                    <div class="d-flex flex-column h-100">
+        
+                        <div class="flex" data-perfect-scrollbar>
+                            <ul class="list-group list-group-fit mb-3">
+        
+        
+                                <li class="list-group-item px-4 py-3 bg-light">
+                                    <a class="d-flex align-items-center position-relative">
+                                        <span class="avatar avatar-sm  mr-3 flex-shrink-0">
+        
+                                            <img src="{{ instructor.photo.url }}" alt="{{ instructor.user.username }}"
+                                                class="avatar-img rounded-circle">
+        
+                                        </span>
+                                        <span class="flex d-flex flex-column" style="max-width: 175px;">
+                                            <strong class="text-body">{{ instructor.user.last_name}} {{ instructor.user.first_name}}</strong>
+        
+                                            <span class="text-muted text-ellipsis">{{ instructor.classe }} (Professeur)</span>
+        
+                                        </span>
+                                    </a>
+                                </li>
+        
+        
+                                
+                                {% for i in info_classe.student_classe.all %}
+                                <li class="list-group-item px-4 py-3">
+                                    <a href="#" class="d-flex align-items-center position-relative">
+                                        <span class="avatar avatar-sm  mr-3 flex-shrink-0">
+                                        
+                                            <img src="{{ i.photo.url }}" alt="Avatar" class="avatar-img rounded-circle">
+                                        
+                                        </span>
+                                        <span class="flex d-flex flex-column" style="max-width: 175px;">
+                                            <strong class="text-body">{{ i.user.last_name}} {{ i.user.first_name}}</strong>
+        
+                                        </span>
+                                    </a>
+                                </li>
+                                    
+                                {% endfor %}
+                                    
+        
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock online %}
+        
+
+    {% block script %}
+    
+    <!-- Messages App -->
+    <script src="/static/assets/js/reconnecting-websocket.js"></script>
+    <script>
+        var classe = {{ classe_json }};
+        var username = {{ username }};
+
+        console.log(classe)
+
+        var chatSocket = new ReconnectingWebSocket(
+            `ws://` + window.location.host +
+            `/ws/student/messages/` + classe + `/`);
+
+        chatSocket.onopen = function (e) {
+            fecthMessages();
+        }
+
+        chatSocket.onmessage = function (e) {
+            var data = JSON.parse(e.data);
+            if (data['command'] === 'messages') {
+                for (let i = 0; i < data['messages'].length; i++) {
+                    creataMessage(data['messages'][i]);
+                    console.log("djdjd")
+                }
+            } else if (data['command'] === 'new_message') {
+                creataMessage(data['message']);
+                console.log('sdd')
+            }
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            var messageInputDom = document.querySelector('#chat-message-input');
+            var message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'command': 'new_message',
+                'from': username,
+                'classe': classe
+            }));
+
+            messageInputDom.value = '';
+        };
+        function fecthMessages() {
+            chatSocket.send(JSON.stringify({
+                'command': 'fetch_messages',
+                'classe': classe
+            }));
+        }
+
+
+        function creataMessage(data) {
+            var auteur = data['auteur']
+            var msgDivTag = document.createElement('li')
+            msgDivTag.setAttribute('class', 'message d-inline-flex');
+            // var imgTag = document.createElement('img')
+            // var spanTag = document.createElement('span')
+            // spanTag.textContent = message.message
+            if (auteur === username) {
+                msgDivTag.innerHTML = `
+        
+                    <div class="message__aside">
+                        <a href="instructor-profile.html" class="avatar">
+                            <img src="${data.auteur_image}" alt="people"
+                                class="avatar-img rounded-circle">
+                        </a>
+                    </div>
+                    <div class="message__body card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex mr-3">
+                                    <a href="instructor-profile.html" class="text-body"><strong>
+                                            Moi</strong></a>
+                                </div>
+                                <div>
+                                    <small class="text-white">${data.date_add}</small>
+                                </div>
+                            </div>
+                            <span class="text-white">${data.message}</span>
+    
+                        </div>
+                    </div>
+                `;
+            } else {
+                msgDivTag.innerHTML = `
+                <div class="message__aside">
+                    <a href="instructor-profile.html" class="avatar">
+                        <img src="${data.auteur_image}" alt="people"
+                            class="avatar-img rounded-circle">
+                    </a>
+                </div>
+                <div class="message__body card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center">
+                            <div class="flex mr-3">
+                                <a href="instructor-profile.html"
+                                    class="text-body"><strong>${data.auteur}</strong></a>
+                            </div>
+                            <div>
+                                <small class="text-muted">${data.date_add}</small>
+                            </div>
+                        </div>
+                        <span class="text-black-70">${data.message}</span>
+    
+                    </div>
+                </div>
+                `;
+            }
+            document.querySelector('#chat-log').appendChild(msgDivTag);
+        }
+    </script>
+    
+    {% endblock script %}
